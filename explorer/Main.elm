@@ -4,11 +4,23 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import JsonTransform as JT
+import Bootstrap.Navbar as Navbar
+import Bootstrap.Grid as Grid
+import Bootstrap.Grid.Row as Row
+import Bootstrap.Grid.Col as Col
+import Bootstrap.Card as Card
+import Bootstrap.Button as Button
+import Bootstrap.ListGroup as Listgroup
+import Bootstrap.Form.Select as Select
+import Bootstrap.Form.Textarea as Textarea
+import Bootstrap.Form.Input as Input
+import Bootstrap.Form as Form
+import Bootstrap.CDN as CDN
 
 
 main =
     Html.program
-        { init = ( Model "" "" "" "", Cmd.none )
+        { init = ( Model "" "" "" "" "", Cmd.none )
         , view = view
         , update = update
         , subscriptions = always Sub.none
@@ -24,6 +36,7 @@ type alias Model =
     , func : String
     , selector : String
     , result : String
+    , transformation : String
     }
 
 
@@ -40,6 +53,7 @@ type Msg
     | UpdateJson String
     | UpdateFunc String
     | UpdateSelector String
+    | ChooseTransformation String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -113,6 +127,9 @@ update msg model =
             in
                 ( { model | result = result }, Cmd.none )
 
+        ChooseTransformation transformation ->
+            ( { model | transformation = transformation }, Cmd.none )
+
         UpdateJson json ->
             ( { model | json = json }, Cmd.none )
 
@@ -127,87 +144,153 @@ update msg model =
 -- View
 
 
+showCurrentTransform model =
+    case model.transformation of
+        "forEach" ->
+            Card.config [ Card.outlineInfo, Card.attrs [ style [ ( "margin-top", "20px" ) ] ] ]
+                |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "forEach" ]
+                |> Card.block []
+                    [ Card.text [] [ text "Enter a function to apply:" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "func"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateFunc
+                            ]
+                    , Card.custom <| Button.button [ Button.onClick RunForeach, Button.info, Button.attrs [ style [ ( "margin-top", "10px" ) ] ] ] [ text "Transform" ]
+                    ]
+                |> Card.view
+
+        "nodes" ->
+            Card.config [ Card.outlineInfo, Card.attrs [ style [ ( "margin-top", "20px" ) ] ] ]
+                |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "nodes" ]
+                |> Card.block []
+                    [ Card.text [] [ text "Enter a selector:" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "selector"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateSelector
+                            ]
+                    , Card.custom <| Button.button [ Button.onClick RunNodes, Button.info, Button.attrs [ style [ ( "margin-top", "10px" ) ] ] ] [ text "Transform" ]
+                    ]
+                |> Card.view
+
+        "remove" ->
+            Card.config [ Card.outlineInfo, Card.attrs [ style [ ( "margin-top", "20px" ) ] ] ]
+                |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "remove" ]
+                |> Card.block []
+                    [ Card.text [] [ text "Enter a selector:" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "selector"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateSelector
+                            ]
+                    , Card.custom <| Button.button [ Button.onClick RunRemove, Button.info, Button.attrs [ style [ ( "margin-top", "10px" ) ] ] ] [ text "Transform" ]
+                    ]
+                |> Card.view
+
+        "update" ->
+            Card.config [ Card.outlineInfo, Card.attrs [ style [ ( "margin-top", "20px" ) ] ] ]
+                |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "update" ]
+                |> Card.block []
+                    [ Card.text [] [ text "Enter a selector:" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "selector"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateSelector
+                            ]
+                    , Card.text [] [ text "Enter a function:" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "func"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateFunc
+                            ]
+                    , Card.custom <| Button.button [ Button.onClick RunUpdate, Button.info, Button.attrs [ style [ ( "margin-top", "10px" ) ] ] ] [ text "Transform" ]
+                    ]
+                |> Card.view
+
+        "condense" ->
+            Card.config [ Card.outlineInfo, Card.attrs [ style [ ( "margin-top", "20px" ) ] ] ]
+                |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "condense" ]
+                |> Card.block []
+                    [ Card.text [] [ text "Enter a selector:" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "selector"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateSelector
+                            ]
+                    , Card.custom <| Button.button [ Button.onClick RunCondense, Button.info, Button.attrs [ style [ ( "margin-top", "10px" ) ] ] ] [ text "Transform" ]
+                    ]
+                |> Card.view
+
+        _ ->
+            text ""
+
+
+selectTransform =
+    Select.select
+        [ Select.id "myselect"
+        , Select.onChange ChooseTransformation
+        ]
+        [ Select.item [ value "choose" ] [ text "choose a transformation" ]
+        , Select.item [ value "forEach" ] [ text "forEach" ]
+        , Select.item [ value "nodes" ] [ text "nodes" ]
+        , Select.item [ value "remove" ] [ text "remove" ]
+        , Select.item [ value "update" ] [ text "update" ]
+        , Select.item [ value "condense" ] [ text "condense" ]
+        ]
+
+
+transform model =
+    Card.config [ Card.outlinePrimary ]
+        |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "Transform" ]
+        |> Card.block []
+            [ Card.text [] [ text "Choose a transformation" ]
+            , Card.custom <| selectTransform
+            , Card.custom <| showCurrentTransform model
+            ]
+        |> Card.view
+
+
 view : Model -> Html Msg
 view model =
-    div []
-        [ div []
-            [ h2 [] [ text "Json" ]
-            , textarea [ onInput UpdateJson, rows 20, cols 20 ] []
-            ]
-        , div []
-            [ h2 [] [ text "Transform" ]
-            , div []
-                [ div []
-                    [ h4 [] [ text "forEach" ]
-                    , table []
-                        [ tr []
-                            [ th [] [ text "function" ]
-                            , th [] [ text "action" ]
-                            ]
-                        , tr []
-                            [ td [] [ textarea [ onInput UpdateFunc, rows 10, cols 10 ] [] ]
-                            , td [] [ button [ onClick RunForeach ] [ text "Transform forEach" ] ]
-                            ]
+    Grid.container []
+        [ CDN.stylesheet
+        , h3 [] [ text "Elm Json Transform - Explorer" ]
+        , Grid.row []
+            [ Grid.col [ Col.xl ]
+                [ Card.config [ Card.outlinePrimary ]
+                    |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "Json" ]
+                    |> Card.block []
+                        [ Card.text [] [ text "Paste the json you want to modify here." ]
+                        , Card.custom <|
+                            Textarea.textarea
+                                [ Textarea.id "json"
+                                , Textarea.rows 20
+                                , Textarea.onInput UpdateJson
+                                ]
                         ]
-                    ]
-                , div []
-                    [ h4 [] [ text "nodes" ]
-                    , table []
-                        [ tr []
-                            [ th [] [ text "selector" ]
-                            , th [] [ text "action" ]
-                            ]
-                        , tr []
-                            [ td [] [ input [ onInput UpdateSelector ] [] ]
-                            , td [] [ button [ onClick RunNodes ] [ text "Transform nodes" ] ]
-                            ]
-                        ]
-                    ]
-                , div []
-                    [ h4 [] [ text "remove" ]
-                    , table []
-                        [ tr []
-                            [ th [] [ text "selector" ]
-                            , th [] [ text "action" ]
-                            ]
-                        , tr []
-                            [ td [] [ input [ onInput UpdateSelector ] [] ]
-                            , td [] [ button [ onClick RunRemove ] [ text "Transform remove" ] ]
-                            ]
-                        ]
-                    ]
-                , div []
-                    [ h4 [] [ text "update" ]
-                    , table []
-                        [ tr []
-                            [ th [] [ text "selector" ]
-                            , th [] [ text "function" ]
-                            , th [] [ text "action" ]
-                            ]
-                        , tr []
-                            [ td [] [ textarea [ onInput UpdateSelector, rows 10, cols 10 ] [] ]
-                            , td [] [ textarea [ onInput UpdateFunc, rows 10, cols 10 ] [] ]
-                            , td [] [ button [ onClick RunUpdate ] [ text "Transform update" ] ]
-                            ]
-                        ]
-                    ]
-                , div []
-                    [ h4 [] [ text "condense" ]
-                    , table []
-                        [ tr []
-                            [ th [] [ text "selector" ]
-                            , th [] [ text "action" ]
-                            ]
-                        , tr []
-                            [ td [] [ input [ onInput UpdateSelector ] [] ]
-                            , td [] [ button [ onClick RunCondense ] [ text "Transform condense" ] ]
-                            ]
-                        ]
-                    ]
+                    |> Card.view
                 ]
-            ]
-        , div []
-            [ h2 [] [ text "Result" ]
-            , textarea [ rows 20, cols 20, value model.result ] []
+            , Grid.col [] [ transform model ]
+            , Grid.col [ Col.xl ]
+                [ Card.config [ Card.outlinePrimary ]
+                    |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "Result" ]
+                    |> Card.block []
+                        [ Card.text [] [ text "This is the modifed json result" ]
+                        , Card.custom <|
+                            Textarea.textarea
+                                [ Textarea.id "result"
+                                , Textarea.rows 20
+                                , Textarea.value model.result
+                                ]
+                        ]
+                    |> Card.view
+                ]
             ]
         ]
