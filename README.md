@@ -152,7 +152,7 @@ You can try them out using the [JSONSelect expression tester](https://jsonselect
 
 ## Install
 
-you must use elm-github-install
+you must use elm-github-install and include in your elm-package.json as follows:
 
 ```
 "dependencies": {
@@ -165,6 +165,8 @@ you must use elm-github-install
   }
 }
 ```
+
+Then run elm-install
 
 ## Example
 
