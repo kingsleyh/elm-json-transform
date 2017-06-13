@@ -157,12 +157,6 @@ you must use [elm-github-install](https://github.com/gdotdesign/elm-github-insta
 ```
 "dependencies": {
   "kingsleyh/elm-json-transform": "1.0.0 <= v < 2.0.0"
-},
-"dependency-sources": {
-  "kingsleyh/elm-json-transform": {
-    "url": "https://github.com/kingsleyh/elm-json-transform",
-    "ref": "master"
-  }
 }
 ```
 
