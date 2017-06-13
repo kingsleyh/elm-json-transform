@@ -48,3 +48,76 @@ returns:
    }
 }
 ```
+
+### nodes
+
+Returns all matching nodes from the object.
+
+```
+nodes obj ".age"
+
+returns:
+
+[35, 15]
+```
+
+### remove
+
+Removes matching elements from the original object.
+
+```
+remove obj ".age"
+
+returns:
+
+{
+   "george": {
+      "movie": "Repo Man"
+   },
+   "mary": {
+      "movie": "Twilight"
+   }
+}
+```
+
+### update
+
+Updates all matching nodes using the given callback.
+
+```
+func = """
+function(age) {
+   return age - 5;
+}
+"""
+
+update obj ".age" func
+
+returns:
+
+{
+   "george": {
+      "age": 30,
+      "movie": "Repo Man"
+   },
+   "mary": {
+      "age": 10,
+      "movie": "Twilight"
+   }
+}
+```
+
+### condense
+
+Reduces the original object down to only the matching elements (the hierarchy is maintained).
+
+```
+e.g. condense obj ".age"
+
+returns:
+
+{
+    george: { age: 35 },
+    mary: { age: 15 }
+}
+```
