@@ -7,6 +7,12 @@ This project provides a way to transform a json string. It uses Native javascrip
 
 It uses [js-traverse](https://github.com/substack/js-traverse) to traverse and modify JavaScript object nodes that match JSONSelect selectors.
 
+## Explorer
+
+Try it out using the [Elm Json Transform Explorer](https://kingsleyh.github.io/elm-json-transform/)
+
+## Usage
+
 There are 5 things you can do given the following json string:
 
 ```json
