@@ -1,13 +1,12 @@
 {
-  "version": "1.0.2",
-  "summary": "Test Suites",
+  "version": "1.0.3",
+  "summary": "Elm Json Transform",
   "repository": "http://github.com/kingsleyh/elm-json-transform.git",
   "license": "BSD3",
   "source-directories": [
-    "../src",
-    "."
+    "src"
   ],
-  "exposed-modules": [],
+  "exposed-modules": ["JsonTransform"],
   "native-modules": true,
   "dependencies": {
     "elm-lang/core": "5.0.0 <= v < 6.0.0",
