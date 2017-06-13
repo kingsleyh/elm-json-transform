@@ -121,3 +121,43 @@ returns:
     mary: { age: 15 }
 }
 ```
+
+## Selectors
+
+it supports the following selectors:
+
+```
+*
+type
+.key
+ancestor selector
+parent > selector
+sibling ~ selector
+selector1, selector2
+:root
+:nth-child(n)
+:nth-child(even)
+:nth-child(odd)
+:nth-last-child(n)
+:first-child
+:last-child
+:only-child
+:has(selector)
+:val("string")
+:contains("substring")
+```
+
+You can try them out using the [JSONSelect expression tester](https://jsonselect.curiousconcept.com/)
+
+## Install
+
+you must use elm-github-install
+
+```
+"kingsleyh/elm-json-transform": "1.0.0 <= v < 2.0.0"
+```
+
+## Example
+
+See the [tests](https://github.com/kingsleyh/elm-json-transform/blob/master/testing/tests/JsonTransformTests.elm) for example usage
+
