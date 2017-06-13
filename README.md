@@ -5,7 +5,7 @@
 
 This project provides a way to transform a json string. It uses Native javascript under the hood. For reasons of simplicity and usability it takes the json as a string and returns the modified json as a string. This is because that is what my use case for building this library was.
 
-It uses [js-traverse](https://github.com/substack/js-traverse) to traverse and modify JavaScript object nodes that match [JSONSelect](http://jsonselect.org/) selectors.
+It uses [js-traverse](https://github.com/substack/js-traverse) to traverse and modify JavaScript object nodes that match JSONSelect selectors.
 
 There are 5 things you can do given the following json string:
 
