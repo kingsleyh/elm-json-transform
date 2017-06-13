@@ -1,17 +1,20 @@
 {
   "version": "1.0.0",
-  "summary": "Transform JSON objects",
+  "summary": "Test Suites",
   "repository": "http://github.com/kingsleyh/elm-json-transform.git",
   "license": "BSD3",
   "source-directories": [
-    "src"
+    "../src",
+    "."
   ],
-  "exposed-modules": [
-    "JsonTransform"
-  ],
+  "exposed-modules": [],
   "native-modules": true,
   "dependencies": {
-    "elm-lang/core": "5.0.0 <= v < 6.0.0"
+    "eeue56/elm-html-test": "4.0.0 <= v < 5.0.0",
+    "elm-community/elm-test": "4.0.0 <= v < 5.0.0",
+    "elm-lang/core": "5.0.0 <= v < 6.0.0",
+    "elm-lang/dom": "1.1.1 <= v < 2.0.0",
+    "elm-lang/html": "2.0.0 <= v < 3.0.0"
   },
   "elm-version": "0.18.0 <= v < 0.19.0"
 }
