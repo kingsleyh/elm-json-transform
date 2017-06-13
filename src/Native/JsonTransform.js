@@ -1539,32 +1539,32 @@ var forEach = function(obj, func){
   var json = JSON.parse(obj);
   var f = eval("var f = " + func + "; f");
   select(json).forEach(f);
-  return json;
-}
+  return JSON.stringify(json);
+};
 
 var nodes = function (obj, selector){
   var json = JSON.parse(obj);
-  return select(json, selector).nodes();
-}
+  return JSON.stringify(select(json, selector).nodes());
+};
 
 var remove = function (obj, selector){
   var json = JSON.parse(obj);
   select(json, selector).remove();
-  return json;
-}
+    return JSON.stringify(json);
+};
 
 var update = function(obj, selector, func){
   var json = JSON.parse(obj);
   var f = eval("var f = " + func + "; f");
   select(json, selector).update(f);
-  return json;
-}
+  return JSON.stringify(json);
+};
 
 var condense = function (obj, selector){
   var json = JSON.parse(obj);
-  select(obj, selector).condense();
-  return json;
-}
+  select(json, selector).condense();
+  return JSON.stringify(json);
+};
 
   return {
     forEach: F2(forEach),

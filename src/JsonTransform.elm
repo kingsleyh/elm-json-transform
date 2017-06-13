@@ -115,7 +115,7 @@ function(age) {
 }
 """
 
-e.g update obj func
+e.g update obj ".age" func
 
 returns:
 
