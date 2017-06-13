@@ -1,6 +1,7 @@
 # Elm Json Transform
 
 [![Build Status](https://travis-ci.org/kingsleyh/elm-json-transform.svg?branch=master)](https://travis-ci.org/kingsleyh/elm-json-transform)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 This project provides a way to transform a json string. It uses Native javascript under the hood. For reasons of simplicity and usability it takes the json as a string and returns the modified json as a string. This is because that is what my use case for building this library was.
 
