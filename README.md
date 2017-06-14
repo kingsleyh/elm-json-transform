@@ -119,7 +119,7 @@ returns:
 Reduces the original object down to only the matching elements (the hierarchy is maintained).
 
 ```
-e.g. condense obj ".age"
+condense obj ".age"
 
 returns:
 
@@ -128,6 +128,29 @@ returns:
     mary: { age: 15 }
 }
 ```
+
+### updateObjectContaining
+
+Updates key/value string pairs in an object that is located by a string key/value pair that exists inside the object
+
+```
+updateObjectContaining obj [("movie","Repo Man")] [("movie","Cars")]
+
+returns:
+
+{
+   "george": {
+      "age": 35,
+      "movie": "Repo Man"
+   },
+   "mary": {
+      "age": 15,
+      "movie": "Cars"
+   }
+}
+
+```
+
 
 ## Selectors
 
