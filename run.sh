@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd testing/tests
+cd tests
 elm-package install -y
 cd ..
 elm-test

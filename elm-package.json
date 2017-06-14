@@ -6,7 +6,9 @@
   "source-directories": [
     "src"
   ],
-  "exposed-modules": ["JsonTransform"],
+  "exposed-modules": [
+    "JsonTransform"
+  ],
   "native-modules": true,
   "dependencies": {
     "elm-lang/core": "5.0.0 <= v < 6.0.0",
