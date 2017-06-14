@@ -11453,48 +11453,60 @@ var _kingsleyh$elm_json_transform$JsonTransform$forEach = F2(
 	});
 var _kingsleyh$elm_json_transform$JsonTransform$updateObjectContaining = F3(
 	function (obj, keyPairs, updateKeyPairs) {
+		var removeQuotes = function (v) {
+			var remover = A3(
+				_elm_lang$core$Regex$replace,
+				_elm_lang$core$Regex$All,
+				_elm_lang$core$Regex$regex('^\"|\"$'),
+				function (_p0) {
+					return '';
+				});
+			return remover(v);
+		};
 		var updaters = A2(
 			_elm_lang$core$String$join,
 			'\n',
 			A2(
 				_elm_lang$core$List$map,
-				function (_p0) {
-					var _p1 = _p0;
+				function (_p1) {
+					var _p2 = _p1;
 					return A2(
 						_kingsleyh$elm_json_transform$String_Interpolate$interpolate,
-						'node.{0}=\'{1}\';',
+						'node.{0}={1};',
 						{
 							ctor: '::',
-							_0: _p1._0,
+							_0: _p2._0,
 							_1: {
 								ctor: '::',
-								_0: _p1._1,
+								_0: removeQuotes(_p2._1),
 								_1: {ctor: '[]'}
 							}
 						});
 				},
 				updateKeyPairs));
+		var b = A2(_elm_lang$core$Debug$log, 'updater: ', updaters);
 		var finders = A2(
 			_elm_lang$core$String$join,
 			' ',
 			A2(
 				_elm_lang$core$List$map,
-				function (_p2) {
-					var _p3 = _p2;
+				function (_p3) {
+					var _p4 = _p3;
 					return A2(
 						_kingsleyh$elm_json_transform$String_Interpolate$interpolate,
-						'&& node.{0} && node.{0}==\'{1}\'',
+						'&& node.{0} && node.{0}==={1}',
 						{
 							ctor: '::',
-							_0: _p3._0,
+							_0: _p4._0,
 							_1: {
 								ctor: '::',
-								_0: _p3._1,
+								_0: removeQuotes(_p4._1),
 								_1: {ctor: '[]'}
 							}
 						});
 				},
 				keyPairs));
+		var a = A2(_elm_lang$core$Debug$log, 'finder: ', finders);
 		var func = A2(
 			_kingsleyh$elm_json_transform$String_Interpolate$interpolate,
 			'\n        function(node){\n          if(node {0}){\n            {1}\n          }\n        }\n    ',
@@ -17440,7 +17452,7 @@ var _kingsleyh$elm_json_transform$Main$showCurrentTransform = function (model) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Enter finder pairs in this format: key1:value1,key2:value2'),
+								_0: _elm_lang$html$Html$text('Enter finder pairs in this format: key1:\'a_string\',key2:false'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -17467,7 +17479,7 @@ var _kingsleyh$elm_json_transform$Main$showCurrentTransform = function (model) {
 									{ctor: '[]'},
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Enter updater pairs in this format: key1:value1,key2:value2'),
+										_0: _elm_lang$html$Html$text('Enter updater pairs in this format: key1:\'a_string\',key2:false'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {

@@ -32,6 +32,7 @@ See how this json is transformed in the below functions
 import Json.Encode as JE
 import Native.JsonTransform
 import String.Interpolate exposing(interpolate)
+import Regex as R
 
 {-| forEach
 
@@ -157,20 +158,26 @@ condense obj selector =
 
 {-| updateObjectContaining
 
-Updates key/value string pairs in an object that is located by a string key/value pair that exists inside the object
+Updates key/value pairs in an object that is located by a key/value pair that exists inside the object
 
-e.g. updateObjectContaining obj [("movie","Repo Man")] [("movie","Cars")]
+Note - you must format the value like this:
+
+ strings:  ("movie", "'Repo Man'")  <- use single quotes
+ numbers:  ("age", "35")
+ arrays :  ("things", ['a','b']) <- use single quotes
+
+e.g. updateObjectContaining obj [("movie","'Repo Man'")] [("movie","'Cars'")]
 
 returns:
 
 {
    "george": {
       "age": 35,
-      "movie": "Repo Man"
+      "movie": "Cars"
    },
    "mary": {
       "age": 15,
-      "movie": "Cars"
+      "movie": "Twilight"
    }
 }
 
@@ -178,12 +185,22 @@ returns:
 updateObjectContaining : String -> List (String, String) -> List (String, String) -> String
 updateObjectContaining obj keyPairs updateKeyPairs =
   let
-    finders = List.map (\(k,v) -> (interpolate "&& node.{0} && node.{0}=='{1}'") [k,v] ) keyPairs
+    finders = List.map (\(k,v) -> (interpolate "&& node.{0} && node.{0}==={1}") [k, removeQuotes(v)] ) keyPairs
               |> String.join " "
 
-    updaters = List.map (\(k,v) -> (interpolate "node.{0}='{1}';" [k,v])) updateKeyPairs
+    removeQuotes : String -> String
+    removeQuotes v =
+      let
+       remover = R.replace R.All (R.regex "^\"|\"$") (\_ -> "")
+      in
+       remover v
+
+    updaters = List.map (\(k,v) -> (interpolate "node.{0}={1};" [k, removeQuotes(v)])) updateKeyPairs
                |> String.join "\n"
 
+
+    a = Debug.log "finder: " finders
+    b = Debug.log "updater: " updaters
 
     func = interpolate """
         function(node){

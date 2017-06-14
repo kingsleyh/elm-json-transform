@@ -271,14 +271,14 @@ showCurrentTransform model =
             Card.config [ Card.outlineInfo, Card.attrs [ style [ ( "margin-top", "20px" ) ] ] ]
                 |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "update" ]
                 |> Card.block []
-                    [ Card.text [] [ text "Enter finder pairs in this format: key1:value1,key2:value2" ]
+                    [ Card.text [] [ text "Enter finder pairs in this format: key1:'a_string',key2:false" ]
                     , Card.custom <|
                         Textarea.textarea
                             [ Textarea.id "finders"
                             , Textarea.rows 4
                             , Textarea.onInput UpdateFinders
                             ]
-                    , Card.text [] [ text "Enter updater pairs in this format: key1:value1,key2:value2" ]
+                    , Card.text [] [ text "Enter updater pairs in this format: key1:'a_string',key2:false" ]
                     , Card.custom <|
                         Textarea.textarea
                             [ Textarea.id "updaters"
