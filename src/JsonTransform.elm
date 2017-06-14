@@ -159,7 +159,7 @@ condense obj selector =
 
 Updates key/value string pairs in an object that is located by a string key/value pair that exists inside the object
 
-e.g. updateObjectContaining obj ("age","15") [("movie","Cars")]
+e.g. updateObjectContaining obj [("movie","Repo Man")] [("movie","Cars")]
 
 returns:
 

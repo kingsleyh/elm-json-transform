@@ -20,7 +20,7 @@ import Bootstrap.CDN as CDN
 
 main =
     Html.program
-        { init = ( Model "" "" "" "" "", Cmd.none )
+        { init = ( Model "" "" "" "" "" "" "", Cmd.none )
         , view = view
         , update = update
         , subscriptions = always Sub.none
@@ -37,6 +37,8 @@ type alias Model =
     , selector : String
     , result : String
     , transformation : String
+    , finders : String
+    , updaters : String
     }
 
 
@@ -50,9 +52,12 @@ type Msg
     | RunRemove
     | RunUpdate
     | RunCondense
+    | RunObjectContaining
     | UpdateJson String
     | UpdateFunc String
     | UpdateSelector String
+    | UpdateFinders String
+    | UpdateUpdaters String
     | ChooseTransformation String
 
 
@@ -127,6 +132,34 @@ update msg model =
             in
                 ( { model | result = result }, Cmd.none )
 
+        RunObjectContaining ->
+            let
+                json =
+                    model.json
+
+                makePairs : String -> ( String, String )
+                makePairs value =
+                    let
+                        tokens =
+                            String.split ":" value
+                    in
+                        ( (Maybe.withDefault "" (List.head tokens)), (Maybe.withDefault "" (tokens |> List.reverse |> List.head)) )
+
+                finders =
+                    model.finders
+                        |> String.split ","
+                        |> List.map (\p -> makePairs p)
+
+                updaters =
+                    model.updaters
+                        |> String.split ","
+                        |> List.map (\p -> makePairs p)
+
+                result =
+                    JT.updateObjectContaining json finders updaters
+            in
+                ( { model | result = result }, Cmd.none )
+
         ChooseTransformation transformation ->
             ( { model | transformation = transformation }, Cmd.none )
 
@@ -138,6 +171,12 @@ update msg model =
 
         UpdateSelector selector ->
             ( { model | selector = selector }, Cmd.none )
+
+        UpdateFinders finders ->
+            ( { model | finders = finders }, Cmd.none )
+
+        UpdateUpdaters updaters ->
+            ( { model | updaters = updaters }, Cmd.none )
 
 
 
@@ -228,6 +267,28 @@ showCurrentTransform model =
                     ]
                 |> Card.view
 
+        "updateObjectContaining" ->
+            Card.config [ Card.outlineInfo, Card.attrs [ style [ ( "margin-top", "20px" ) ] ] ]
+                |> Card.headerH4 [ style [ ( "text-align", "center" ) ] ] [ text "update" ]
+                |> Card.block []
+                    [ Card.text [] [ text "Enter finder pairs in this format: key1:value1,key2:value2" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "finders"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateFinders
+                            ]
+                    , Card.text [] [ text "Enter updater pairs in this format: key1:value1,key2:value2" ]
+                    , Card.custom <|
+                        Textarea.textarea
+                            [ Textarea.id "updaters"
+                            , Textarea.rows 4
+                            , Textarea.onInput UpdateUpdaters
+                            ]
+                    , Card.custom <| Button.button [ Button.onClick RunObjectContaining, Button.info, Button.attrs [ style [ ( "margin-top", "10px" ) ] ] ] [ text "Transform" ]
+                    ]
+                |> Card.view
+
         _ ->
             text ""
 
@@ -243,6 +304,7 @@ selectTransform =
         , Select.item [ value "remove" ] [ text "remove" ]
         , Select.item [ value "update" ] [ text "update" ]
         , Select.item [ value "condense" ] [ text "condense" ]
+        , Select.item [ value "updateObjectContaining" ] [ text "updateObjectContaining" ]
         ]
 
 
