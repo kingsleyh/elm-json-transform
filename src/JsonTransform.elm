@@ -184,7 +184,6 @@ updateObjectContaining obj keyPairs updateKeyPairs =
     updaters = List.map (\(k,v) -> (interpolate "node.{0}='{1}';" [k,v])) updateKeyPairs
                |> String.join "\n"
 
-    a = Debug.log "finders" finders
 
     func = interpolate """
         function(node){
